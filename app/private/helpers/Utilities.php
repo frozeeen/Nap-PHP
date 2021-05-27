@@ -1,12 +1,11 @@
 <?php
 	 
 	/**
-	 * Return the word if singular or plural
-	 * Note: Case sensitive, what you send - what you get
+	 * @description return the word if singular or plural (case sensitive)
 	 *
-	 * @param $n is the number or count
-	 * @param $s is the singular word
-	 * @param $p is the plural, if null return $s appended by "s"
+	 * @param int $n - the number or count
+	 * @param string $s - the singular word
+	 * @param string $p - the plural, if null return $s appended by "s"
 	 * @return string
 	 */
 	function singularOrPlural($n, $s, $p = ''){
