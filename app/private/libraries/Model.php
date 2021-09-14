@@ -8,7 +8,7 @@ class Model extends Database{
 	public $tableName = null; // Hold the table name
 	public $tableColumnsShow = null;
 
-	public $tableID = "id"; // The Update reference
+	public $tableRef = "id"; // The Update and get reference
 	private $tableColumns = null;
 	private $tableColumnsData = null;
 	private $queryError = false;
@@ -20,7 +20,7 @@ class Model extends Database{
 		$this->checkTableName();
 
 		$sql = "SELECT * FROM " . $this->tableName . "
-				WHERE " . $this->tableID . " = :" . $this->tableID;
+				WHERE " . $this->tableRef . " = :" . $this->tableRef;
 
 		if( $filtered ){
 			$this->cquery($sql);
@@ -29,7 +29,7 @@ class Model extends Database{
 		}
 
 		// Query the passed id
-		$this->bind(":" . $this->tableID, $id);
+		$this->bind(":" . $this->tableRef, $id);
 
 		// Save data to global data holder object
 		$this->data = $this->single();
@@ -68,6 +68,8 @@ class Model extends Database{
 			if( isset( $this->data->{$value->Field} ) ){
 				$sql .= $value->Field . ", ";
 				$sql_end .= ":" . $value->Field . ',';
+			}else{
+				unset( $value );
 			}
 		}
 		$sql = rtrim($sql, ', ') . ') VALUES(' . rtrim($sql_end, ',') . ')';
@@ -77,6 +79,7 @@ class Model extends Database{
 		foreach ($this->data as $key => $value) {
 			$this->bind(":" . $key, $value);
 		}
+
 		$this->execute();
 
 		// Get the last ID
@@ -90,7 +93,11 @@ class Model extends Database{
 	public function update($updating = null){
 
 		# Replace with passed updating data
-		if( !is_null($updating) ) $this->data = (object)$updating;
+		if( !is_null($updating) ){
+			$this->data = (object)$updating;
+		}else{
+			$this->data = (object)$this->data;
+		}
 
 		# Checking for values
 		if( $this->checkData() ) $this->err("Data is empty");
@@ -117,7 +124,7 @@ class Model extends Database{
 
 		# Remove characters and place where condition
 		$sql = rtrim($sql, ',');
-		$sql .= ' WHERE '. $this->tableID .' = :' . $this->tableID;
+		$sql .= ' WHERE '. $this->tableRef .' = :' . $this->tableRef;
 
 		$this->query($sql);
 
@@ -137,7 +144,7 @@ class Model extends Database{
 
 			$this->bind(":".$key, $value);
 		}
-		$this->bind(":" . $this->tableID, $this->data->{$this->tableID});
+		$this->bind(":" . $this->tableRef, $this->data->{$this->tableRef});
 
 		# Execute
 		return $this->execute();
@@ -150,16 +157,16 @@ class Model extends Database{
 			return false;
 		}
 
-		$sql = "DELETE FROM " . $this->tableName . " WHERE " . $this->tableID . " = :" . $this->tableID;
+		$sql = "DELETE FROM " . $this->tableName . " WHERE " . $this->tableRef . " = :" . $this->tableRef;
 		$this->query($sql);
-		$this->bind(":" . $this->tableID, $this->data->{$this->tableID});
+		$this->bind(":" . $this->tableRef, $this->data->{$this->tableRef});
 		$this->execute();
 
 		return true;
 	}
 
 	# PREPARE QUERY
-	public function fquery($sql){
+	public function cquery($sql){
 		$sql = str_replace("*", $this->tableColumnsShow, $sql);
 		$this->query($sql);
 	}

@@ -1,13 +1,16 @@
 <?php
 
-	/*
+	/**
 	 * Base Controller
 	 * Loads Models and Views
 	 */
 	
 	class Api{
 
-		# Load the API model
+		/**
+		 * Load the specific passed model
+		 * @param array $model Model file name
+		 */
 		public function model($model){
 
 			# Require model file
@@ -18,7 +21,11 @@
 
 		}
 
-		# Helper to return the JSON
+		/**
+		 * Return the json then exit the request
+		 * @param array $data The data to be encoded to array
+		 * @param array $additional Any additional data or configurations
+		 */
 		public function json($data, $additional = []){
 
 			# Provide the response code

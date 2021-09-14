@@ -12,7 +12,7 @@
 class File{
 	
 	private $DEFAULT_location = "";
-	public $DEFAULT_maximum_size = 5242880;
+	// public $DEFAULT_maximum_size = 5242880;
 	public $result = false;
 	public $files = [];
 
@@ -76,10 +76,11 @@ class File{
 				return "Corrupted file";
 			}
 
+			# REMOVED from `updates`
 			# Check for maximum sizes
-			if( $files[$i]['size'] >= $this->DEFAULT_maximum_size ){
-				return "Files is too big";
-			}
+			// if( $files[$i]['size'] >= $this->DEFAULT_maximum_size ){
+			// 	return "Files is too big";
+			// }
 
 			# Generate the actual name
 

@@ -46,7 +46,7 @@ class Validate{
 
 		# Flags 
 		if( isset($v_param['exitOnError']) ){
-			$this->exitOnError = true;
+			$this->exitOnError = $v_param['exitOnError'];
 		}
 	}
 
@@ -96,12 +96,17 @@ class Validate{
 
 			# CHECK FOR MINIMUM
 			if( isset($data['min']) && $v_len < $data['min'] ){
-				$v_status = $v_name . " should be more than " . $data['min'];
+				$v_status = $v_name . " should be more than " . $data['min'] . " characters";
 			}
 
 			# CHECK FOR MAXIMUM
 			if( isset($data['max']) && $v_len > $data['max'] ){
-				$v_status = $v_name . " should be not greater than " . $data['max'];
+				$v_status = $v_name . " should be not greater than " . $data['max'] . " characters";
+			}
+
+			# CHECK IF REQUIRED
+			if( isset($data['required']) && $v_len == 0 ){
+				$v_status = $v_name . " is required";
 			}
 
 			# CHEKCK FOR EMAIL
@@ -110,6 +115,7 @@ class Validate{
 			}
 
 			# PUSH DATA according to the checked data above
+			$this->resultSet[$key]["label"] = $data["name"];
 			$this->resultSet[$key]['message'] = $v_status;
 
 			# GLOBAL RESULT
@@ -120,8 +126,7 @@ class Validate{
 		}
 
 		if( $this->exitOnError && !$this->result ){
-			http_response_code(400);
-			$error = array_merge(["status" => false], ["errors" => $this->resultSet]);
+			$error = array_merge(["success" => false], ["errors" => $this->resultSet]);
 			echo json_encode($error);
 			exit;
 		}
