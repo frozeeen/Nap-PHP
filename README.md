@@ -18,11 +18,10 @@ RewriteBase /foobar/api/public
 ### File structure
 Using this boilerplate, your going to work on `setup` folder frequently.
 ```PHP
-* App
-    * private # All of defined classes and main drivers of API are located
-    * setup # All of your API/Controller, Database Config, Models, Routes
-* setup
-    * Public # You can place your assets and upload your static files here 
+* app
+    * private   # All of driver classes and main drivers of API are located
+    * setup     # All of your API/Controller, Database Configuration, Models, Routes
+* public        # You can place your assets and upload your static files here 
 ```
 
 ### APIs / Controller
