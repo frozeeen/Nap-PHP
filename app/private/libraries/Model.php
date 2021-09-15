@@ -66,7 +66,7 @@ class Model extends Database{
 		$sql_end = "";
 		foreach($this->tableColumns as $key => $value) {
 			if( isset( $this->data->{$value->Field} ) ){
-				$sql .= $value->Field . ", ";
+				$sql .= "`". $value->Field . "`, ";
 				$sql_end .= ":" . $value->Field . ',';
 			}else{
 				unset( $value );
