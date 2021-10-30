@@ -23,11 +23,8 @@ class File{
 	public function __construct($location = null){
 
 		// Set the active location of the uploading files
-		// If exist
 		if( $location != null ){
 			$this->DEFAULT_location = $location;
-		}else{
-			$this->DEFAULT_location = $_SERVER['DOCUMENT_ROOT'] . "/frozen/fmvc/public/uploads/";
 		}
 	}
 

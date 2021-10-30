@@ -7,19 +7,19 @@
 
 		/**
 		 * By `REQUEST_METHOD` request
-		 * url will go to `test` API 
-		 * depending to its $_SERVER['REQUEST_METHOD']
+		 * url will go to `TestAPI` API 
+		 * depending on $_SERVER['REQUEST_METHOD']
 		 */
-		"tests" 		=> "tests",
+		"tests" 		=> "TestAPI",
 
 		/**
-		 * By `DEFINED_METHOD` request
-		 * url will go to `test` API calling `foobar` method
+		 * By `CUSTOM_METHOD` request
+		 * url will call the `TestAPI` API, calling `foobar` method
 		 */
-		"tests/foobar" 	=> "tests.foobar",
+		"tests/foobar" 	=> "TestAPI.foobar",
 
 		/** With Parameter */
-		"tests/:id"		=> "tests"
+		"tests/:id"		=> "TestAPI"
 
 	];
 

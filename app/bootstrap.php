@@ -9,6 +9,7 @@
 	 * by calling the core which load the required controller
 	 * based on the clients request
 	 ***/
+	session_start();
 	require_once 'setup/config/config.php';
 	require_once 'setup/helpers/Utilities.php';
 

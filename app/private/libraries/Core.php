@@ -12,59 +12,13 @@ class Core{
 	protected $currentMethod = 'index';
 	protected $params = [];
 
-	// Get the URL On load of the Page
+	# Get the URL on load of the Page
 	public function __construct(){
 		
 		# Get current URL
 		$url = $_GET['url'] ?? "";
 		$url = trim(filter_var(strtolower($url), FILTER_SANITIZE_URL), '/');
-		$parameters = [];
-		$selectedClass = "";
-
-		# Get routes
-		require APPROOT . "setup/routes.php";
-
-		# If primary route doesn't exist, try with placeholder
-		if( !isset( $routes[strtolower($url)] ) ){
-
-			$isRouteExist = false;
-			$url_split = explode('/', $url);
-			$url_split_length = count($url_split);
-
-			foreach($routes as $template => $route){
-
-				$route_split = explode("/", $template);
-				if( $url_split_length == count($route_split) ){
-
-					$isMatched = true;
-					foreach($route_split as $i => $_slug){
-						if( $_slug[0] != ':' && $_slug != $url_split[$i] ){
-							$isMatched = false;
-						}
-					}
-
-					# Get the parameters based on placeholder
-					if( $isMatched ){
-						foreach($route_split as $i => $_slug){
-							if( $_slug[0] == ':' ){
-								$parameters[substr($_slug, 1)] = $url_split[$i];
-							}
-						}
-						$selectedClass = $route;
-						$isRouteExist = true;
-						break;
-					}
-
-				}
-			}
-			
-			if( $isRouteExist === false ){
-				$this->throwError();
-			}
-		
-		}else{
-			$selectedClass = $routes[$url];
-		}
+		$selectedClass = $this->getRequestClass($url);
 
 		# Split the handler and the method
 		$url = explode(".", $selectedClass);
@@ -94,8 +48,57 @@ class Core{
 		}
 
 		// Call the callback with the array of parameters
-		call_user_func_array([$this->currentController, $this->currentMethod], [$parameters]);
+		call_user_func_array([$this->currentController, $this->currentMethod], [$this->params]);
+	}
 
+	/**
+	 * Get request class based on url
+	 * @param string $url - The current url
+	 */
+	private function getRequestClass($url){
+
+		# Get routes
+		require APPROOT . "setup/routes.php";
+
+		# If primary route doesn't exist, try with placeholder
+		if( !isset( $routes[strtolower($url)] ) ){
+
+			$isRouteExist = false;
+			$url_split = explode('/', $url);
+			$url_split_length = count($url_split);
+
+			foreach($routes as $template => $route){
+
+				$route_split = explode("/", $template);
+				if( $url_split_length == count($route_split) ){
+
+					$isMatched = true;
+					foreach($route_split as $i => $_slug){
+						if( $_slug[0] != ':' && $_slug != $url_split[$i] ){
+							$isMatched = false;
+						}
+					}
+
+					# Get the parameters based on placeholder
+					if( $isMatched ){
+						foreach($route_split as $i => $_slug){
+							if( $_slug[0] == ':' ){
+								$this->params[substr($_slug, 1)] = $url_split[$i];
+							}
+						}
+						return $route;
+					}
+
+				}
+			}
+			
+			if( $isRouteExist === false ){
+				$this->throwError();
+			}
+		
+		}else{
+			return $routes[$url];
+		}
 	}
 
 	# Return error due to incomplete API

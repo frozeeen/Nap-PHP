@@ -192,6 +192,7 @@ class Model extends Database{
 		}
 	}
 	private function getTableColumns(){
+		if( $this->tableColumns != null ) return false;
 
 		$sql = "DESCRIBE " . $this->tableName;
 

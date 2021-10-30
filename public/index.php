@@ -3,7 +3,7 @@
 	header("Access-Control-Allow-Origin: *");
 	header('Access-Control-Allow-Credentials', 'true');
 	header('Access-Control-Allow-Headers','Content-Type, Authorization');
-	// header("Content-Type: application/json; charset=UTF-8");
+	header("Content-Type: application/json; charset=UTF-8");
 	
 	require_once '../app/bootstrap.php';
 

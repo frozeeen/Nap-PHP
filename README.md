@@ -1,6 +1,6 @@
 ## PURE PHP REST API BOILERPLATE
 
-A very simple `ready-to-use` api boilerplate for small projects. As of writing you might encounter bugs and errors that are lurking behind the scene. So feel free to edit the source code or inform me about the issue.
+A very simple `ready-to-use` api boilerplate for small projects. You might encounter bugs and errors that are lurking behind the scene. Feel free to edit the source code or inform me about the issue.
 
 ### Installation
 
@@ -20,19 +20,19 @@ Using this boilerplate, your going to work on `setup` folder frequently.
 ```PHP
 * app
     * private   # All of driver classes and main drivers of API are located
-    * setup     # All of your API/Controller, Database Configuration, Models, Routes
+    * setup     # All of your API, Database Configuration, Models, Routes
 * public        # You can place your assets and upload your static files here 
 ```
 
-### APIs / Controller
-Our controller or script that will process our request will be in the `app\setup\apis`, every api will extends to `API` class which will help us to load models.
+### APIs or (Controller)
+Our controller or script that will process our request will be in the `app\setup\apis`, every api will extend to `API` class which will help us to load models, and verify CSRF tokens.
 ```PHP
-class Tests extends Api{
+class TestAPI extends Api{
     public function get(){}     # GET Request
     public function post(){}    # POST Request
     public function put(){}     # PUT Request
     public function delete(){}  # DELETE Request
-    public function foobar(){}  # Custom method
+    public function foobar(){}  # CUSTOM method
 }
 
 ```
@@ -42,17 +42,17 @@ The routes are located at `app\setup\routes.php`
 ```PHP
 /**
  * By `REQUEST_METHOD` request
- * url will go to `test` API 
- * depending to its $_SERVER['REQUEST_METHOD']
+ * url will go to `TestAPI` API 
+ * depending on $_SERVER['REQUEST_METHOD']
  */
-"tests" 		=> "tests",
+"tests" 		=> "TestAPI",
 
 /**
- * By `DEFINED_METHOD` request
- * url will go to `test` API calling `foobar` method
+ * By `CUSTOM_METHOD` request
+ * url will call the `TestAPI` API, calling `foobar` method
  */
-"tests/foobar" 	=> "tests.foobar"
+"tests/foobar" 	=> "TestAPI.foobar"
 
 /** With Parameter */
-"tests/:id"     => "tests"
+"tests/:id"     => "TestAPI"
 ```
