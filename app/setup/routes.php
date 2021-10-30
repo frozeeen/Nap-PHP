@@ -18,7 +18,6 @@
 		 */
 		"tests/foobar" 	=> "tests.foobar",
 
-
 		/** With Parameter */
 		"tests/:id"		=> "tests"
 

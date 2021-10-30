@@ -52,4 +52,7 @@ The routes are located at `app\setup\routes.php`
  * url will go to `test` API calling `foobar` method
  */
 "tests/foobar" 	=> "tests.foobar"
+
+/** With Parameter */
+"tests/:id"     => "tests"
 ```
