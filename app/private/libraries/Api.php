@@ -7,7 +7,10 @@
 	
 	class Api{
 
-		public function __construct(){
+		/**
+		 * Throw error once the CSRF Token is invalid
+		 */
+		public function csrf_verify(){
 			if( $_SERVER["REQUEST_METHOD"] != "GET" && $this->csrf_check_token() === false ){
 				$this->json([
 					"success" => false,
@@ -63,9 +66,16 @@
 			# Provide the response code
 			http_response_code( isset($additional['code']) ? $additional['code'] : 200 );
 
+			# Check for `success` flag, to change response type
+			$success = true;
+			if( isset( $data['success'] ) ){
+				$success = $data['success'];
+				unset($data['success']);
+			}
+
 			# Return the encoded data
 			echo json_encode([
-				"success" 	=> true,
+				"success" 	=> $success,
 				"data" 		=> $data
 			]);
 			exit;

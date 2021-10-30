@@ -9,8 +9,7 @@ class Model extends Database{
 	public $tableColumnsShow = null;
 
 	public $tableRef = "id"; // The Update and get reference
-	private $tableColumns = null;
-	private $tableColumnsData = null;
+	public $tableColumns = null;
 	private $queryError = false;
 
 	# GET the current data
@@ -53,21 +52,21 @@ class Model extends Database{
 	}
 
 	# ADD the current data
-	public function insert(){
+	public function insert($data = null){
 
 		// Cast array into an object
-		$this->data = (object)$this->data;
+		$this->data = (is_null($data)) ? (object)$this->data : (object)$data;
 
 		// Get columns of the current table
-		$this->getTableColumns();
+		$this->checkTableColumns();
 
 		// Generate query
 		$sql = "INSERT INTO " . $this->tableName . "(";
 		$sql_end = "";
 		foreach($this->tableColumns as $key => $value) {
-			if( isset( $this->data->{$value->Field} ) ){
-				$sql .= "`". $value->Field . "`, ";
-				$sql_end .= ":" . $value->Field . ',';
+			if( isset( $this->data->{$value} ) ){
+				$sql .= "`". $value . "`, ";
+				$sql_end .= ":" . $value . ',';
 			}else{
 				unset( $value );
 			}
@@ -84,9 +83,10 @@ class Model extends Database{
 
 		// Get the last ID
 		$this->query("SELECT LAST_INSERT_ID() AS 'last'");
+		$newID = $this->single()->last;
 	
 		// Push
-		return $this->single()->last;
+		return $this->get($newID);
 	}
 
 	# UPDATE the current data
@@ -103,7 +103,7 @@ class Model extends Database{
 		if( $this->checkData() ) $this->err("Data is empty");
 
 		# Get valid columns
-		$this->getTableColumns();
+		$this->checkTableColumns();
 
 		# Prepare update
 		$sql = 'UPDATE ' . $this->tableName . ' SET ';
@@ -112,7 +112,7 @@ class Model extends Database{
 			# Check columns
 			$found = false;
 			foreach ($this->tableColumns as $value) {
-				if( strtolower($value->Field) == strtolower($key) ){
+				if( strtolower($value) == strtolower($key) ){
 					$found = true;
 					break;
 				}
@@ -134,8 +134,8 @@ class Model extends Database{
 
 			# Check columns
 			$found = false;
-			foreach ($this->tableColumns as $v) {
-				if( strtolower($v->Field) == strtolower($key) ){
+			foreach ($this->tableColumns as $column) {
+				if( strtolower($column) == strtolower($key) ){
 					$found = true;
 					break;
 				}
@@ -145,9 +145,9 @@ class Model extends Database{
 			$this->bind(":".$key, $value);
 		}
 		$this->bind(":" . $this->tableRef, $this->data->{$this->tableRef});
+		$this->execute();
 
-		# Execute
-		return $this->execute();
+		return $this->get($this->data->id);
 	}
 
 	# DELETE the current pulled data
@@ -191,18 +191,10 @@ class Model extends Database{
 			return true;
 		}
 	}
-	private function getTableColumns(){
-		if( $this->tableColumns != null ) return false;
-
-		$sql = "DESCRIBE " . $this->tableName;
-
-		# Column names
-		$this->query($sql);
-		$this->tableColumns = $this->resultSet(PDO::FETCH_COLUMN);
-
-		# Column data
-		$this->query($sql);
-		$this->tableColumnsData = $this->resultSet();
+	private function checkTableColumns(){
+		if( $this->tableColumns == null ){
+			$this->err("Column tables not defined");
+		}
 	}
 
 	# Exit on error

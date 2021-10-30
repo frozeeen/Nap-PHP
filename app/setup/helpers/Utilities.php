@@ -53,5 +53,15 @@
 		exit;
 	}
 
+	/**
+	 * Generate random ID
+	 * @param $n number of string to be generated
+	 * @param $s base sequence of string to be generated
+	 * @return string
+	 */
+	function str_randomize($n = 7, $s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"){
+		return $gen = substr(str_shuffle($s), 0, $n);
+	}
+
 
 ?>
