@@ -5,7 +5,8 @@
 	 */
 	class Tests extends Api{
 
-		public function get(){
+		public function get($PARAMS){
+			print_r( $PARAMS );
 			echo "You get this using " . $_SERVER['REQUEST_METHOD'] . " request";
 		}
 

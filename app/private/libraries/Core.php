@@ -18,17 +18,56 @@ class Core{
 		# Get current URL
 		$url = $_GET['url'] ?? "";
 		$url = trim(filter_var(strtolower($url), FILTER_SANITIZE_URL), '/');
+		$parameters = [];
+		$selectedClass = "";
 
 		# Get routes
 		require APPROOT . "setup/routes.php";
 
-		# Throw error if route doesn't exist
+		# If primary route doesn't exist, try with placeholder
 		if( !isset( $routes[strtolower($url)] ) ){
-			$this->throwError();
+
+			$isRouteExist = false;
+			$url_split = explode('/', $url);
+			$url_split_length = count($url_split);
+
+			foreach($routes as $template => $route){
+
+				$route_split = explode("/", $template);
+				if( $url_split_length == count($route_split) ){
+
+					$isMatched = true;
+					foreach($route_split as $i => $_slug){
+						if( $_slug[0] != ':' && $_slug != $url_split[$i] ){
+							$isMatched = false;
+						}
+					}
+
+					# Get the parameters based on placeholder
+					if( $isMatched ){
+						foreach($route_split as $i => $_slug){
+							if( $_slug[0] == ':' ){
+								$parameters[substr($_slug, 1)] = $url_split[$i];
+							}
+						}
+						$selectedClass = $route;
+						$isRouteExist = true;
+						break;
+					}
+
+				}
+			}
+			
+			if( $isRouteExist === false ){
+				$this->throwError();
+			}
+		
+		}else{
+			$selectedClass = $routes[$url];
 		}
 
 		# Split the handler and the method
-		$url = explode(".", $routes[$url]);
+		$url = explode(".", $selectedClass);
 
 		# Look for the controller in the `Controllers` folder
 		if( file_exists(APPROOT .'setup/apis/' . ucwords($url[0]) . '.php') ){
@@ -55,7 +94,7 @@ class Core{
 		}
 
 		// Call the callback with the array of parameters
-		call_user_func_array([$this->currentController, $this->currentMethod], []);
+		call_user_func_array([$this->currentController, $this->currentMethod], [$parameters]);
 
 	}
 
