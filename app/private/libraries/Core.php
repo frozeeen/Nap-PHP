@@ -31,7 +31,7 @@ class Core{
 		}
 
 		# Get post data
-		if( file_get_contents('php://input') != '' ){
+		if( file_get_contents('php://input') != '' && $_POST == '' ){
 			$_POST = (array)json_decode(file_get_contents('php://input'), true);
 		}
 

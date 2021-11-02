@@ -8,6 +8,16 @@
 	class Api{
 
 		/**
+		 * Check if correct method
+		 * @param string $expectingMethod
+		 */
+		public function expect_method($expectingMethod){
+			if( $_SERVER["REQUEST_METHOD"] != $expectingMethod ){
+				$this->json(null);
+			}
+		}
+
+		/**
 		 * Throw error once the CSRF Token is invalid
 		 */
 		public function csrf_verify(){
