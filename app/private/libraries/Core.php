@@ -21,7 +21,7 @@ class Core{
 		$selectedClass = $this->getRequestClass($url);
 
 		# Split the handler and the method
-		$url = explode(".", $selectedClass);
+		$url = explode(":", $selectedClass);
 
 		# Look for the controller in the `Controllers` folder
 		if( file_exists(APPROOT .'setup/apis/' . ucwords($url[0]) . '.php') ){
@@ -104,9 +104,8 @@ class Core{
 	# Return error due to incomplete API
 	private function throwError(){
 		returnJSON([
-			"error" => 404,
 			"message" => "Api not found"
-		]);
+		], 404);
 	}
 
 }

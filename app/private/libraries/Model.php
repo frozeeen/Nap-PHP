@@ -32,18 +32,13 @@ class Model extends Database{
 
 		// Save data to global data holder object
 		$this->data = $this->single();
-
-		if( $this->checkData() ){
-			$this->queryError = true;
-		}else{
-			$this->exist = true;
-		}
+		$this->exist = ($this->rowCount() > 0);
 
 		return $this->data;
 	}
 
 	# EXIST the current data at the column
-	public function exist($data, $column){
+	public function exist($column, $data){
 		$sql = "SELECT * FROM " . $tableName . " WHERE " . $column . " = " . $data;
 		$this->query($sql);
 		$this->single();

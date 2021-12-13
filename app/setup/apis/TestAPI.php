@@ -5,24 +5,41 @@
 	 */
 	class TestAPI extends Api{
 
-		public function get($PARAMS){
-			echo "You get this using " . $_SERVER['REQUEST_METHOD'] . " request";
+		public function get(){
+			$this->json([
+				"message" => "You get this using " . $_SERVER['REQUEST_METHOD'] . " request"
+			]);
 		}
 
 		public function post(){
-			echo "Posting something using " . $_SERVER['REQUEST_METHOD'] . " request?";
+			$this->json([
+				"message" => "Posting something using " . $_SERVER['REQUEST_METHOD'] . " request?"
+			]);
 		}
 
 		public function put(){
-			echo "Putting using " . $_SERVER["REQUEST_METHOD"] . " request";
+			$this->json([
+				"message" => "Updating something using " . $_SERVER['REQUEST_METHOD'] . " request?"
+			]);
 		}
 
 		public function delete(){
-			echo "You're now scrubbing something using " . $_SERVER["REQUEST_METHOD"] . " request";
+			$this->json([
+				"message" => "You're now scrubbing something using " . $_SERVER["REQUEST_METHOD"] . " request"
+			]);
 		}
 
 		public function foobar(){
-			echo "You're now accessing this method by DEFINED_METHOD";
+			$this->json([
+				"message" => "You're now accessing this method by DEFINED_METHOD, any REQUEST_METHOD will be accepted here"
+			]);
+		}
+
+		public function withParams($params){
+			$this->json([
+				"params" => $params,
+				"message" => "Accessing this page with params"
+			]);
 		}
 
 	}

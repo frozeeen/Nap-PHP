@@ -13,7 +13,9 @@
 		 */
 		public function expect_method($expectingMethod){
 			if( $_SERVER["REQUEST_METHOD"] != $expectingMethod ){
-				$this->json(null);
+				$this->json([
+					"message" => $_SERVER["REQUEST_METHOD"] . " request is not allowed to perform this action"
+				], ['code' => 500]);
 			}
 		}
 
@@ -31,10 +33,11 @@
 
 		/**
 		 * Verify CSRF Token
+		 * @param boolean $refresh
 		 */
 		private $CSRF_SESSION_NAME = "csrf-token";
-		public function csrf_get_token(){
-			if( empty($_SESSION[$this->CSRF_SESSION_NAME]) ){
+		public function csrf_get_token($refresh = false){
+			if( empty($_SESSION[$this->CSRF_SESSION_NAME]) || $refresh === true ){
 				$_SESSION[$this->CSRF_SESSION_NAME] = bin2hex(random_bytes(32));
 			}
 			return $_SESSION[$this->CSRF_SESSION_NAME];
@@ -69,23 +72,28 @@
 		/**
 		 * Return the json then exit the request
 		 * @param array $data The data to be encoded to array
-		 * @param array $additional Any additional data or configurations
+		 * @param array $response_code Any additional data or configurations
 		 */
-		public function json($data, $additional = []){
+		public function json($data, $response_code = 200){
 
-			# Provide the response code
-			http_response_code( isset($additional['code']) ? $additional['code'] : 200 );
-
-			# Check for `success` flag, to change response type
-			$success = true;
-			if( isset( $data['success'] ) ){
-				$success = $data['success'];
-				unset($data['success']);
+			# Check if null value
+			if( is_null($data) ){
+				$data = [
+					"code" => 404,
+					"message" => "API NOT FOUND"
+				];
 			}
+
+			# Set the response code
+			http_response_code($response_code);
+
+			# Main Success
+			$mainSuccess = !isset( $data["status"] ) ? true : $data['status'];
+			unset($data['status']);
 
 			# Return the encoded data
 			echo json_encode([
-				"success" 	=> $success,
+				"status" 	=> $mainSuccess,
 				"data" 		=> $data
 			]);
 			exit;
