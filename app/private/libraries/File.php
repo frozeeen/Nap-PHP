@@ -30,9 +30,10 @@ class File{
 
 	/**
 	 * Error Checking then handle
-	 * @param `files` contains all the files
-	 * @param `file_name` contain the id or the key of the said image
-	 * @param `array` contains all the returned parameters
+	 * @param array `files` contains all the files
+	 * @param string `file_name` contain the id or the key of the said image
+     * @param boolean $upload
+	 * @return array `array` contains all the returned parameters
 	 **/
 	public function handle($files, $file_name = "", $upload = false){
 
@@ -99,11 +100,11 @@ class File{
 		}
 	}
 
-	/**
-	 * Organize the files
-	 * @param `files` files to organize
-	 * @return `array` organized files
-	 **/
+    /**
+     * Organize the files
+     * @param `files` files to organize
+     * @return array `array` organized files
+     */
 	public function organize($files){
 
 		// Returning array
@@ -128,10 +129,12 @@ class File{
 		return $returning;
 	}
 
-	/** 
-	 * File uploading 
-	 * @param `files` contains all the files
-	 **/
+    /**
+     * File uploading
+     * @param `files` contains all the files
+     *
+     * @return bool
+     */
 	public function upload($files){
 
 		// Upload every image

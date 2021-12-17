@@ -32,8 +32,8 @@ class Validate{
 
 	/**
 	 * Construct the data of this class
-	 * @param `v_data` the array of data passed to the incapsulated data
-	 * @param `flags` the flag of the passed data (see constructor for ref)
+	 * @param array `v_data` the array of data passed to the incapsulated data
+	 * @param array `flags` the flag of the passed data (see constructor for ref)
 	 **/
 	public function init($v_data = [], $v_param = []){
 
@@ -50,11 +50,11 @@ class Validate{
 		}
 	}
 
-	/**
-	 * Validate data
-	 * Purpose: Validate the `validating_data` in this class
-	 * @return `array-object`
-	 **/
+    /**
+     * Validate data
+     * Purpose: Validate the `validating_data` in this class
+     * @return void `array-object`
+     */
 	public function run(){
 
 		// Check every data

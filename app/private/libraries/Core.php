@@ -51,10 +51,11 @@ class Core{
 		call_user_func_array([$this->currentController, $this->currentMethod], [$this->params]);
 	}
 
-	/**
-	 * Get request class based on url
-	 * @param string $url - The current url
-	 */
+    /**
+     * Get request class based on url
+     * @param string $url - The current url
+     * @return mixed
+     */
 	private function getRequestClass($url){
 
 		# Get routes
