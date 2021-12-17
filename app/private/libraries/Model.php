@@ -39,7 +39,7 @@ class Model extends Database{
 
 	# EXIST the current data at the column
 	public function exist($column, $data){
-		$sql = "SELECT * FROM " . $tableName . " WHERE " . $column . " = " . $data;
+		$sql = "SELECT * FROM " . $this->tableName . " WHERE " . $column . " = " . $data;
 		$this->query($sql);
 		$this->single();
 
