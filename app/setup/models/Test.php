@@ -3,7 +3,7 @@
 	class Test extends Model{
 		
 		function __construct(){
-			$this->tableName = "users";
+			$this->table_name = "test";
 		}
 
 	}

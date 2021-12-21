@@ -1,48 +1,166 @@
-## NAP
-NAP is vanilla PHP REST-API boilerplate. It's friendly and lightweight 🐘⚡.
+![NAP Banner](https://user-images.githubusercontent.com/40148013/146707759-45ed54f6-f992-441a-b102-682169baeef4.jpg)
 
-### Installation
-* Clone this repo into your project, change the folder name to `api` and done.
+**Table of contents**
+* [ Installation ](#installation)
+* [ File Structure ](#file-structure)
+* [ APIs ](#apis)
+	* [ API class helpers ](#api-class-helpers)
+* [ Routing ](#routing)
+* [ Models ](#models)
+	* [ Database configuration ](#database-configuration)
+	* [ Creating models ](#creating-models)
+	* [ Model in action ](#model-in-action)
 
-### File structure
-Using this boilerplate, your going to work on `setup` folder frequently.
+## Installation
+Clone this repo into our project, change the folder name to `api` and done.
+
+## File structure
+Using this boilerplate, we're going to work on `setup` folder frequently.
 ```PHP
 * app
-    * private   # All of driver classes and main drivers of API are located
-    * setup     # All of your API, Database Configuration, Models, Routes
-* public        # You can place your assets and upload your static files here 
+	* private   # Main drivers of boilerplate are located
+	* setup     # APIs, Database Configuration, Models, Routes etc.
+		* apis		
+		* composer
+		* helpers	
+		* configs
+		* models
+* public        # We can place assets and upload your static files here 
 ```
 
-### APIs or (Controller)
-Our controller or script that will process our request will be in the `app\setup\apis`, every api will extend to `API` class which will help us to load models, and verify CSRF tokens.
-```PHP
-class TestAPI extends Api{
-    public function get(){}     # GET Request
-    public function post(){}    # POST Request
-    public function put(){}     # PUT Request
-    public function delete(){}  # DELETE Request
-    public function foobar(){}  # CUSTOM method
-    public function withParams($PARAMS){} # WITH parameters
-}
-
-```
-
-### Routing
+## Routing
 The routes are located at `app\setup\routes.php`
 ```PHP
-/**
- * By `REQUEST_METHOD` request
- * url will go to `TestAPI` API 
- * depending on $_SERVER['REQUEST_METHOD']
- */
-"tests" 		=> "TestAPI",
 
-/**
- * By `CUSTOM_METHOD` request
- * url will call the `TestAPI` API, calling `foobar` method
- */
-"tests/foobar" 	=> "TestAPI:foobar"
+	/** By `REQUEST_METHOD` routes */
+	$routing->get("url", "classApi::method");
+	$routing->post("url", "classApi::method");
+	$routing->put("url", "classApi::method");
+	$routing->delete("url", "classApi::method");
 
-/** With Parameter */
-"tests/:id"     => "TestAPI:withParams"
+	/**
+	 * Auto routing `REQUEST_METHOD`
+	 * This is equal to
+	 * $route->get("url", 	"class::get");
+	 * $route->post("url", 	"class::post");
+	 * $route->put("url", 	"class::put");
+	 * $route->delete("url", class::delete");
+	 */
+	$routing->auto("url", "classApi");
+
+	/** With parameter/s URL */
+	$routing->get("url/:id", "classApi::method");
+
+```
+
+## APIs
+Our APIs that will process our request will be in the `app\setup\apis`, every api will extend to `Api` class which will help us to load models, make responses, and verify CSRF tokens.
+```PHP
+class TestAPI extends Api{
+	public function get(){}     # GET Request
+	public function post(){}    # POST Request
+	public function put(){}     # PUT Request
+	public function delete(){}  # DELETE Request
+	public function foobar(){}  # CUSTOM method
+
+	# For, with parameters URL, we have several ways
+	# First, we can access it from Api class
+	public function choiceOne(){
+		$this->id; // (string)
+	}
+
+	# Second, from argument
+	# $params is an object containing the parameters
+	public function choiceTwo($params){
+		$params; // (object)
+		$params->id; // (string)
+	}
+}
+```
+
+### APIs helpers
+API class comes with simple methods that can help speed up our development.
+```php
+class TestAPI extends Api{
+
+	public function foobar(){
+
+		# Terminate the request when not using `POST` request
+		$this->expectMethod("POST");
+
+		# Return CSRF token
+		# You can pass `true` to refresh csrf token
+		$token = $this->csrfGetToken();
+
+	}
+}
+```
+
+## Loading Models / Interacting with MySQL Database
+To interact with MySQL database, we need to create a model that can connect to database and perform queries. Each model will extends to `Model` class, that will give us some *simple* pre-defined methods such as `get`, `insert`, `update`, and `delete`.
+
+### Database Configuration
+First we need to update some configuration to properly connect to MySQL.<br>Go to `app\setup\configs\config.php` and update the following values.
+```php
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_NAME', 'nap');
+```
+
+### Creating a model
+To create a model, go to models, create a *model* that extends to `Model` class.
+```php
+class Task extends Model{
+}
+```
+Next, create a constructor to define our table, specify the table name using `table_name` property, and table columns using `table_columns` property.
+```php
+class Task extends Model{
+	function __construct(){
+		$this->table_name = "tasks";
+		$this->table_columns = ["id", "title", "content"];
+	}
+}
+```
+
+### Model in action
+To use model into our API, we can load model using `model()` method that is part of API class.
+```php
+class TaskAPI extends Api{
+
+	 # Load `Task` model
+	function __construct(){
+		$this->taskModel = $this->model("Task");
+	}
+	
+	# Return data
+	public function get(){
+		$this->taskModel->get("taskID");
+	}
+
+	# Insert new data
+	public function post(){
+		$this->taskModel->insert([
+			"title" => "Take a Nap",
+			"content" => "Let's rest"
+		]);
+	}
+
+	# Update existing task
+	public function put(){
+		$this->taskModel->update([
+			"title" => "Take a Nap (edited)",
+			"content" => "Let's take a rest part 2"
+		], [
+			"id" => "taskID"
+		]);
+	}
+
+	# Delete existing task
+	public function delete(){
+		$this->taskModel->delete("taskID");
+	}
+
+}
 ```

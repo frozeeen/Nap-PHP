@@ -18,8 +18,12 @@
 		private $dbh; // Database Handler
 		private $stmt; // Database Statement
 		private $error; // Database Error
+		public $query = "";
 
-		// Prepare Statement with query
+		/**
+		 * Set the query string
+		 * @param string $sql
+		 */
 		public function query($sql){
 
 			// Set DSN
@@ -41,10 +45,16 @@
 			}
 
 			// Prepare the data
+			$this->query = $sql;
 			$this->stmt = $this->dbh->prepare($sql);
 		}
 
-		// Bind Values
+		/**
+		 * Bind query
+		 * @param string $param binding param
+		 * @param string $value value of binding param
+		 * @param string
+		 */
 		public function bind($param, $value, $type = null){
 
 			// Type Check
@@ -74,25 +84,26 @@
 			$this->stmt->bindValue($param, $value, $type);
 		}
 
-		// Execute
+		/** Execute Query */
 		public function execute(){
 			return $this->stmt->execute();
 		}
 
-		// Get Result Set as Array of Objects
+		/** Get query result set */
 		public function resultSet(){
 			$this->execute();
 			return $this->stmt->fetchAll(PDO::FETCH_OBJ);
 		}
 
-		// Get Single result as Objects
-		public function single(){
+		/** Get single query */
+		public function resultSingle(){
 			$this->execute();
 			return $this->stmt->fetch(PDO::FETCH_OBJ);
 		}
 
-		// Get row Count
+		/** Get query row count */
 		public function rowCount(){
+
 			return $this->stmt->rowCount();
 		}
 

@@ -13,13 +13,15 @@
 
 		public function post(){
 			$this->json([
-				"message" => "Posting something using " . $_SERVER['REQUEST_METHOD'] . " request?"
+				"message" => "Posting something using " . $_SERVER['REQUEST_METHOD'] . " request?",
+				"request" => $this->request
 			]);
 		}
 
 		public function put(){
 			$this->json([
-				"message" => "Updating something using " . $_SERVER['REQUEST_METHOD'] . " request?"
+				"message" => "Updating something using " . $_SERVER['REQUEST_METHOD'] . " request?",
+				"request" => $this->request
 			]);
 		}
 
@@ -31,14 +33,8 @@
 
 		public function foobar(){
 			$this->json([
-				"message" => "You're now accessing this method by DEFINED_METHOD, any REQUEST_METHOD will be accepted here"
-			]);
-		}
-
-		public function withParams($params){
-			$this->json([
-				"params" => $params,
-				"message" => "Accessing this page with params"
+				"id" => "The id is `$this->id`",
+				"message" => "You're now accessing this method by DEFINED_METHOD."
 			]);
 		}
 

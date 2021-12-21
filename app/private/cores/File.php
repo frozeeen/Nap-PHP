@@ -74,15 +74,8 @@ class File{
 				return "Corrupted file";
 			}
 
-			# REMOVED from `updates`
-			# Check for maximum sizes
-			// if( $files[$i]['size'] >= $this->DEFAULT_maximum_size ){
-			// 	return "Files is too big";
-			// }
-
 			# Generate the actual name
-
-			// Only one [filename].[type] || Bunch [filename_count].[type]
+			# Only one [filename].[type] || Bunch [filename_count].[type]
 			$actual_name = ( $i + 1 == $l && $i == 0 ) ? $file_name . "." . $type : $file_name . "_" . $i . "." . $type;
 
 			# Merge the files data and the actual name array
@@ -100,11 +93,11 @@ class File{
 		}
 	}
 
-    /**
-     * Organize the files
-     * @param `files` files to organize
-     * @return array `array` organized files
-     */
+	/**
+	 * Organize the files
+	 * @param array $files files to organize
+	 * @return array
+	 **/
 	public function organize($files){
 
 		// Returning array
@@ -129,12 +122,11 @@ class File{
 		return $returning;
 	}
 
-    /**
-     * File uploading
-     * @param `files` contains all the files
-     *
-     * @return bool
-     */
+	/** 
+	 * File uploading 
+	 * @param `files` contains all the files
+	 * @return bool
+	 **/
 	public function upload($files){
 
 		// Upload every image
