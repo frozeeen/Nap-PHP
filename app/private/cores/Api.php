@@ -13,6 +13,19 @@
 		private $CSRF_SESSION_NAME = "csrf-token";
 
 		/**
+		 * Get the prorperty then return null if not exist
+		 * @param string $propertyName
+		 * @return string
+		 */
+		public function request($propertyName){
+			if( isset( $this->request->{ $propertyName } ) ){
+				return $this->request->{ $propertyName };
+			}else{
+				return null;
+			}
+		}
+
+		/**
 		 * Check `REQUEST_METHOD`
 		 * @param string $expectingMethod
 		 */

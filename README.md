@@ -31,26 +31,24 @@ Using this boilerplate, we're going to work on `setup` folder frequently.
 ## Routing
 The routes are located at `app\setup\routes.php`
 ```PHP
+/** By `REQUEST_METHOD` routes */
+$routing->get("url", "classAPI::method");
+$routing->post("url", "classAPI::method");
+$routing->put("url", "classAPI::method");
+$routing->delete("url", "classAPI::method");
 
-	/** By `REQUEST_METHOD` routes */
-	$routing->get("url", "classApi::method");
-	$routing->post("url", "classApi::method");
-	$routing->put("url", "classApi::method");
-	$routing->delete("url", "classApi::method");
+/**
+ * Auto routing `REQUEST_METHOD`
+ * This is equal to
+ * $route->get("url", 	"class::get");
+ * $route->post("url", 	"class::post");
+ * $route->put("url", 	"class::put");
+ * $route->delete("url", class::delete");
+ */
+$routing->auto("url", "classAPI");
 
-	/**
-	 * Auto routing `REQUEST_METHOD`
-	 * This is equal to
-	 * $route->get("url", 	"class::get");
-	 * $route->post("url", 	"class::post");
-	 * $route->put("url", 	"class::put");
-	 * $route->delete("url", class::delete");
-	 */
-	$routing->auto("url", "classApi");
-
-	/** With parameter/s URL */
-	$routing->get("url/:id", "classApi::method");
-
+/** With parameter/s URL */
+$routing->get("url/:id", "classAPI::method");
 ```
 
 ## APIs
@@ -75,6 +73,27 @@ class TestAPI extends Api{
 		$params; // (object)
 		$params->id; // (string)
 	}
+
+	/**
+	 * Handling Request Parameters
+	 * Sample data:
+	 * {
+	 * 	"username": "foobar",
+	 * 	"email": "foobar@gmail.com"
+	 * } 
+	 **/
+	public function handlingRequest(){
+
+		# Access by Property
+		# Throw error if the request doesn't exist
+		$this->request->username;
+		$this->request->password;
+
+		# Access by method
+		# Return null if doesn't exist
+		$this->request("password");
+	}
+
 }
 ```
 
