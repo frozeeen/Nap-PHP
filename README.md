@@ -1,7 +1,5 @@
 ![NAP Banner](https://user-images.githubusercontent.com/40148013/146707759-45ed54f6-f992-441a-b102-682169baeef4.jpg)
 
-Happy New Year! ✨
-
 **Table of contents**
 * [ Installation ](#installation)
 * [ File Structure ](#file-structure)
@@ -171,10 +169,9 @@ class TaskAPI extends Api{
 	# Update existing task
 	public function put(){
 		$this->taskModel->update([
+			"id" => "taskID",
 			"title" => "Take a Nap (edited)",
 			"content" => "Let's take a rest part 2"
-		], [
-			"id" => "taskID"
 		]);
 	}
 

@@ -6,7 +6,7 @@
 	 ***/
 
 	/** API Boilerplate Configurations */
-	define('APPROOT', dirname( __FILE__ ) . '\\');
+	define('APPROOT', dirname( __FILE__ ) . '/');
 	
 	/*** 
 	 * Once the API is loaded, this bootstrap will start the sequence
