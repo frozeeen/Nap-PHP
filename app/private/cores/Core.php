@@ -133,13 +133,13 @@ class Core{
 
 	# Encode arrays
 	# From: https://www.php.net/manual/en/function.htmlspecialchars.php#50842
-	private function htmlspecialchars_array($arr = array()) {
+	private function htmlspecialchars_array($arrays = array()) {
 		$rs = array();
-		while(list($key,$val) = each($arr)) {
-			if(is_array($val)) {
-				$rs[$key] = $this->htmlspecialchars_array($val);
+		foreach( $arrays as $key => $value ){
+			if(is_array($value)) {
+				$rs[$key] = $this->htmlspecialchars_array($value);
 			}else {
-				$rs[$key] = htmlspecialchars($val, ENT_QUOTES);
+				$rs[$key] = htmlspecialchars($value, ENT_QUOTES);
 			}
 		}
 		return $rs;
