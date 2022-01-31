@@ -53,6 +53,8 @@ class Core{
 				$this->currentController->request[$key] = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
 			}else if( is_array($input) ){
 				$this->currentController->request[$key] = $this->htmlspecialchars_array($input);
+			}else if( is_numeric($input) ){
+				$this->currentController->request[$key] = $input;
 			}
 		}
 		$this->currentController->request = (object)$this->currentController->request;
