@@ -19,4 +19,10 @@
 	/** With parameter/s URL */
 	$routing->get("foobar/:id", "TestAPI::foobar");
 
+	/** Authentication Test */
+	$routing->post("auth/login", "AuthAPI::login");
+	$routing->post("auth/register", "AuthAPI::register");
+	$routing->post("auth/check", "AuthAPI::check");
+	$routing->post("auth/logout", "AuthAPI::logout");
+
 ?>

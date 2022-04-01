@@ -10,6 +10,8 @@
 	* [ Database configuration ](#database-configuration)
 	* [ Creating models ](#creating-models)
 	* [ Model in action ](#model-in-action)
+* [Authentication](#authentication)
+	* [ Authentication Methods ](#authentication-methods)
 
 ## Installation
 Clone this repo into our project, change the folder name to `api` and done.
@@ -181,4 +183,38 @@ class TaskAPI extends Api{
 	}
 
 }
+```
+
+## Authentication
+Login and registration are two of the most important parts of your application, if necessary. NAP provides a basic authentication boilerplate that you can start with, and that also extends to `Model` class.
+
+To use the authentication boilerplate, you can just rename the `Authentication.php` located in the models folder, or duplicate it based on your needs.
+
+The boilerplate is just a plain session-based authentication that you can rewrite if you want or create your own authentication class.
+
+### Authentication Methods
+Authentication Boilerplate includes.
+```php
+/**
+ * First array is the data to be inserted
+ * Second is the keys that need to be unique
+ */
+$this->Authentication->register([
+	"username"	=> $this->request->username,
+	"password"	=> $this->request->password
+], [
+	"unique"	=> ['username']
+]);
+
+# Login
+$this->Authentication->login("username", "password");
+
+/**
+ * Check status if logged or not
+ * Pass `true` to terminate the script if you are not logged in.
+ */
+$this->Authentication->guarded();
+
+# Logout
+$this->Authentication->logout();
 ```

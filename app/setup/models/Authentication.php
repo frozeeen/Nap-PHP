@@ -18,6 +18,9 @@
 				$this->authentication_data = $_SESSION[$this->authentication_session];
 				$this->is_logged_in = true;
 			}
+
+			$this->table_name = "users";
+			$this->table_columns = ['id', 'username', 'password'];
 		}
 
 		/**
@@ -28,8 +31,7 @@
 		public function login($handle, $password){
 
 			# Find row using `handle`
-			$sql = "SELECT * FROM `$this->table_name`
-					WHERE `$this->authentication_handle` = :handle";
+			$sql = "SELECT * FROM `$this->table_name` WHERE `$this->authentication_handle` = :handle";
 			$this->query($sql);
 			$this->bind(":handle", $handle);
 			$row = $this->resultSingle();
@@ -135,7 +137,7 @@
 		 * Prevent request to continue, if not authenticated
 		 * @param boolean $exit_if_not_auth Optional.
 		 */
-		public function guarded($exit_if_not_auth = true){
+		public function guarded($exit_if_not_auth = false){
 			if( isset( $_SESSION[$this->authentication_session] ) === false ){
 				if( $exit_if_not_auth ){
 					http_response_code(400);
