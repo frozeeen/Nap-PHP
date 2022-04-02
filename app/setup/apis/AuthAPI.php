@@ -10,8 +10,31 @@
 		}
 
 		public function login(){
-			$return = $this->Authentication->login($this->request->username, $this->request->password);
 
+			new Validate([
+				[
+					# The value to be checked
+					"value" => $this->request("username"),
+		
+					# The key to this item when it is converted as an object
+					"key"	=> "username",
+		
+					# The "key" on object
+					"label"	=> "Username",
+		
+					# Several checks to be perform, separated by pipe "|"
+					"checks" => "required|min:3|max:50"
+				],
+				[
+					"value" => $this->request("password"),
+					"key"	=> "password",
+					"label"	=> "Password",
+					"checks" => "required|min:8|max:150"
+				]
+			], true);
+		
+			$return = $this->Authentication->login($this->request->username, $this->request->password);
+		
 			$this->json([
 				"status"	=> $return['success'],
 				"message" 	=> $return['message']

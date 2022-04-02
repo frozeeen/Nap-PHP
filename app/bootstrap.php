@@ -30,7 +30,21 @@
 	}
 
 	/** Load primary cores */
-	spl_autoload_register(function($classname){
-		require_once 'private/Cores/' . $classname . '.php';
-	});
+	$DRIVERS = [
+
+		# Required Drivers
+		'Api',
+		'Core',
+		'Database',
+		'Model',
+		'Routing',
+
+		# Optional Drivers
+		'Validate',
+		'File'
+	];
+
+	foreach ($DRIVERS as $value){
+		require_once 'private/Cores/' . $value . '.php';
+	}
 ?>

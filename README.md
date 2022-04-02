@@ -12,6 +12,7 @@
 	* [ Model in action ](#model-in-action)
 * [Authentication](#authentication)
 	* [ Authentication Methods ](#authentication-methods)
+* [Validation](#validation)
 
 ## Installation
 Clone this repo into our project, change the folder name to `api` and done.
@@ -217,4 +218,44 @@ $this->Authentication->guarded();
 
 # Logout
 $this->Authentication->logout();
+```
+
+## Validation
+Checking for values can become exhaustive. That can create a bunch of nested conditional statements.
+
+The validation class is enabled by default in the `boostrap.php` in the app folder. To use the validation class, pass the items with their checks to the first parameter, and pass a boolean to the second parameter to set if the validation will automatically terminate the script if there's an invalid check.
+
+As an example, let's put a validation on the `AuthAPI login`.
+```php
+public function login(){
+
+	new Validate([
+		[
+			# The value to be check
+			"value" => $this->request("username"),
+
+			# The key of this item when it is converted as an object
+			"key"	=> "username",
+
+			# The label on error
+			"label"	=> "Username",
+
+			# Several checks to be perform, separated by pipe "|"
+			"checks" => "required|min:3|max:50"
+		],
+		[
+			"value" => $this->request("password"),
+			"key"	=> "password",
+			"label"	=> "Password",
+			"checks" => "required|min:8|max:150"
+		]
+	], true);
+
+	$return = $this->Authentication->login($this->request->username, $this->request->password);
+
+	$this->json([
+		"status"	=> $return['success'],
+		"message" 	=> $return['message']
+	]);
+}
 ```
