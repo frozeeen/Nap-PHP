@@ -172,9 +172,10 @@ class TaskAPI extends Api{
 	# Update existing task
 	public function put(){
 		$this->taskModel->update([
-			"id" => "taskID",
 			"title" => "Take a Nap (edited)",
 			"content" => "Let's take a rest part 2"
+		], [ # This second parameter is the condition
+			"id" => "taskID"
 		]);
 	}
 

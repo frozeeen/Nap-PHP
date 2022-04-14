@@ -10,7 +10,7 @@
 		}
 
 		public function login(){
-
+			
 			new Validate([
 				[
 					# The value to be checked

@@ -119,14 +119,7 @@ class Model extends Database{
 	 * @param array $data Optional.
 	 * @param array $where
 	 */
-	public function update($data = null){
-
-		# Get referencing data
-		if( isset($data['id']) ){
-			$row_ref = $data[$this->table_ref];
-		}else{
-			$row_ref = $this->data->{ $this->table_ref };
-		}
+	public function update($data = null, $where = []){
 
 		# Replace with passed updating data if exist
 		$data = $data ? (object)$data : (object)$this->data;
@@ -144,7 +137,17 @@ class Model extends Database{
 
 		# Trim invalid characters
 		$sql = rtrim($sql, ',');
-		$sql .= ' WHERE '. $this->table_ref .' = :' . $this->table_ref;
+		$sql .= ' WHERE ';
+
+		# Append conditional
+		$count = count($where) - 1;
+		$counted = 0;
+		foreach ($where as $key => $value) {
+			$sql .= "$key = :$key";
+			if( $counted < $count ) $sql .= " AND ";
+			$counted++;
+		}
+
 		$this->query($sql);
 
 		# Bind parameters
@@ -154,13 +157,14 @@ class Model extends Database{
 				$this->bind(":".$key, $value);
 			}
 		}
-		
-		# Bind the query
-		$this->bind(":" . $this->table_ref, $row_ref);
+		foreach ($where as $key => $value) {
+			$this->bind(":".$key, $value);
+		}
+
 		$this->execute();
 
 		# Return the updated data
-		return $this->get($row_ref);
+		return $this->get($where[$this->table_ref]);
 	}
 
 	/**
